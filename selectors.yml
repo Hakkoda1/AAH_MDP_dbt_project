@@ -1,0 +1,12 @@
+selectors:
+  - name: exclude_items
+    description: DBT models to exclude in UAT run.
+    definition:
+      union:
+        - method: fqn
+          value: "*"
+        - exclude:
+          # - method: tag
+          #   value: not_enabled_uat
+          - method: path
+            value: models/compliance-monitoring

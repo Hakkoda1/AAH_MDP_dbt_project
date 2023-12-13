@@ -1,0 +1,41 @@
+version: 2
+
+sources:
+- name: account_usage
+  database: snowflake
+  schema: account_usage
+  description: "Snowflake account usage related information"
+
+  tables:
+  - name: storage_usage
+  - name: warehouse_metering_history
+  - name: pipe_usage_history
+  - name: copy_history
+  - name: query_history
+  
+- name: general_mgmt
+  database: |
+      {%- if  target.name == "dev" -%} mdp_raw_dev
+      {%- elif target.name == "test"  -%} mdp_raw_dev
+      {%- elif target.name == "uat"  -%} mdp_raw_uat
+      {%- elif target.name == "prod"  -%} mdp_raw_uat
+      {%- elif target.name == "test_slim_ci"  -%} mdp_raw_dev
+      {%- else -%} invalid_database
+      {%- endif -%}
+  schema: general_mgmt
+  tables:
+    - name: source_table
+    - name: source_table_size
+    - name: source_table_config
+
+- name: high_watermark
+  database: |
+      {%- if  target.name == "dev" -%} mdp_raw_dev
+      {%- elif target.name == "test"  -%} mdp_raw_test
+      {%- elif target.name == "uat"  -%} mdp_raw_uat
+      {%- elif target.name == "prod"  -%} mdp_raw_prod
+      {%- else -%} invalid_database
+      {%- endif -%}
+  schema: general_mgmt
+  tables:
+    - name: target_table_log    

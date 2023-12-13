@@ -1,0 +1,721 @@
+version: 2
+
+models:
+  
+  - name: adt_event_fact
+    description: All Admit/Discharge/Transfer events
+    config:
+      tags: ['Admission, Discharges and Transfers​', 'Events (SD)', 'Care Delivery (D)']
+    columns:
+      - name: adt_event_key
+        description: The unique idenifier for the ADT event
+        tests:
+          - unique:
+              config:
+                severity: warn
+          - not_null:
+              config:
+                severity: warn
+          
+      - name: admit_adt_event_key
+        description: The adt event associated with the patient transfer into Inpatient status
+     
+      - name: patient_key
+        description: The patient associated with the ADT event
+        tests:
+          - relationships:
+              field: person_key
+              to: ref('patient_dim')
+              severity: warn
+
+      - name: encounter_key
+        description: The encounter associated with the ADT event
+
+      - name: location_key
+        description: The specific location of the patient
+        tests:
+          - relationships:
+              field: location_key
+              to: ref('location_dim')
+              severity: warn
+
+      - name: adt_event_epic_id
+        description: The unique identifier for the ADT event
+        tests:
+          - unique:
+              config:
+                severity: warn
+          - not_null:
+              config:
+                severity: warn
+
+      - name: event_type
+        description: The type of event record
+
+      - name: accommodation
+        description: The accommodation code for the event
+
+      - name: bed_status
+        description: The status of the bed at the event instant
+
+      - name: event_instant
+        description: The instant the event happened
+
+      - name: board_start_instant
+        description: The instant boarding ended
+
+      - name: board_end_instant
+        description: The instant boarding ended      
+
+
+  - name: adt_pended_event_fact
+    description: Completed or deleted bed requests
+    config:
+      tags: ['Bed Requests and Events​', 'Events (SD)', 'Care Delivery (D)']
+    columns:
+      - name: adt_pended_event_key
+        description: The unique identifier for the needed action record
+        tests:
+          - unique:
+              config:
+                severity: warn
+          - not_null:
+              config:
+                severity: warn     
+
+      - name: adt_event_key 
+        description: The ADT event for bed planning notifications
+          
+      - name: encounter_key
+        description: The encounter associated with the pended event
+
+      - name: patient_key
+        description: The patient associated with the pended event  
+        tests:
+          - relationships:
+              field: person_key
+              to: ref('patient_dim') 
+              severity: warn     
+
+      - name: pended_event_id
+        description: The unique identifier for the needed action record 
+
+      - name: pended_event_type
+        description: The type of pended event 
+
+      - name: is_completed
+        description: Flag indicating if the pended event was completed  
+
+      - name: requested_instant
+        description: The instant the bed assignment was requested
+
+      - name: assigned_instant
+        description: The instant the pending bed assignment was assigned
+
+
+  - name: date_dim
+    config:
+      tags: ['Date']
+    columns:
+      - name: date_key
+        description: Primary date key in smart format 'YYYYMMDD'
+        tests:
+          - unique:
+              config:
+                severity: warn
+          - not_null:
+              config:
+                severity: warn
+
+      - name: calendar_dt
+        description: Datetime 
+
+      - name: day_of_week
+        description: Name of day of the week
+        tests:
+          - accepted_values:
+              values: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+              config:
+                severity: warn
+
+      - name: week_number
+        description: Number of the week
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1
+              max_value: 54
+
+      - name: week_ending_dt
+        description: Exact datetime of the week ending day for calendar_dt
+
+      - name: last_friday_dt
+        description: Exact datetime of the last Friday since calendar_dt
+
+      - name: month_end_dt
+        description: Exact datetime of the month ending day for calendar_dt
+
+      - name: day_of_month
+        description: Day of the month
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1
+              max_value: 31
+
+      - name: month_name
+        description: Name of the month
+        tests:
+          - accepted_values: 
+              values: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+              config:
+                severity: warn
+
+      - name: month_number
+        description: Month number for calendar_dt
+
+      - name: quarter_number
+        description: Quarter number for calendar_dt
+
+      - name: day_of_year
+        description: Day of the year (1-366)
+
+      - name: epic_dte
+        description: Integer representation for date
+
+      - name: epic_dat
+        description: Always equals 121531 - EPIC_DTE
+
+      - name: instant_at_midnight
+        description: Integer representation of the date as a number of seconds
+
+      - name: year
+        description: Year for calendar_dt
+
+      - name: occurrence_in_month
+        description: The number of times this day of the week has occurred in the month (1 through 5)
+
+      - name: tomorrow_dt
+        description: Date after calendar_dt
+
+      - name: year_month
+        description: Year and month for calendar_dt ('YYYYMM')
+
+      - name: weekend_yn
+        description: Flag for a weekend
+
+      - name: quarter_begin_dt
+        description: Datetime where the quarter from calendar_dt begins
+
+      - name: quarter_end_dt
+        description: Datetime where the quarter from calendar_dt ends
+
+      - name: same_day_year_ago
+        description: Same date as calendar_dt one year ago
+
+      - name: prev_day_dt
+        description: Date before calendar_dt
+
+      - name: leap_year_yn
+        description: Flag for leap year
+
+      - name: day_of_the_week_c
+        description: Category index of the days of the week 0 (Thursday) - 6 (Friday). Use DAY_OF_WEEK instead
+
+      - name: year_of_the_week
+        description: Year of the week for calendar_dt
+
+      - name: year_begin_dt
+        description: Year begin datetime for calendar_dt
+
+      - name: month_begin_dt
+        description: Month begin datetime for calendar_dt
+
+      - name: year_begin_dt_str
+        description: Year begin date for calendar_dt  
+
+      - name: month_begin_dt_str
+        description: Month begin date for calendar_dt
+
+      - name: calendar_dt_str
+        description: Date
+
+      - name: qtr_begin_dt_str
+        description: Date where the quarter from calendar_dt begins
+
+      - name: week_begin_dt
+        description: Datetime where the week from calendar_dt begins
+
+      - name: week_begin_dt_str
+        description: Date where the week from calendar_dt begins
+
+      - name: day_of_week_index
+        description:  Number of day of the week from 0 (Sunday) - 6 (Saturday), with the first day of the week being zero. 
+
+      - name: holiday_yn
+        description: Flag for USA holiday
+
+      - name: monthname_year
+        description: Month and year from calendar_dt (Month 1900)
+
+      - name: year_quarter
+        description: Year and quarter from calendar_dt (1900 Q1)
+
+      - name: year_month_str
+        description: Year and month from calendar_dt (YYYY-MM)
+
+      - name: quarter_str
+        description: Quarter from calendar_dt (Q1-Q4)
+
+      - name: bus_day_ct
+        description: Number of business days since 1850-01-01. Removes holidays identified at Service Area and Location levels
+        
+      - name: weekday_ct
+        description: Number of weekdays since 1850-01-01
+
+      - name: usa_fiscal_year_begin_dt
+        description: Beginning of USA fiscal year for calendar_dt
+
+      - name: usa_fiscal_year_end_dt
+        description: End of USA fiscal year for calendar_dt
+
+      - name: year_end_dt
+        description: Year end datetime for calendar_dt 
+
+      - name: which_days_c
+        description: Category list for alternate spelling of weekdays
+
+      - name: month_end_yn
+        description: Flag for month end date
+
+      - name: effective_date
+        description: Current timestamp
+        
+      - name: record_source
+        description: Original source name 
+
+
+  - name: emergency_event_detail_fact
+    config:
+      tags: ['ED Events and Status​​', 'Events (SD)', 'Care Delivery (D)']
+    description: All patient events
+    columns:
+      - name: emergency_event_key
+        description: Unique identifier for an ED event (PK.01)
+        tests:
+          - unique:
+              config:
+                severity: warn
+          - not_null:
+              config:
+                severity: warn
+          
+      - name: emergency_event_detail_location_key
+        description: the encounter where this event happened
+        tests:
+          - relationships:
+              field: location_key
+              to: ref('location_dim')
+              severity: warn
+             
+      - name: emergency_event_detail_adt_event_key
+        description: The ADT event linked to this ED event detail
+
+      - name: emergency_event_detail_provider_key
+        description: The provider associated with this ED event detail
+        tests:
+          - relationships:
+              field: provider_key
+              to: ref('provider_dim')
+              severity: warn
+
+      - name: line
+        description: Unique identifier for an ED event detail (PK.02)
+        tests:
+          - not_null:
+              config:
+                severity: warn
+
+      - name: emergency_event_detail_type
+        description: The type of Ed event record
+  
+      - name: emergency_event_detail_name
+        description: The name of the event detail record
+
+      - name: emergency_event_detail_comment
+        description: Free text field for comment related to emergency event
+
+      - name: emergency_event_detail_instant
+        description: The instant the event occurred
+
+      - name: emergency_event_detail_recorded_instant
+        description: The instant the event was recorded
+        
+      - name: effective_date
+        description: Current timestamp
+  
+      - name: record_source
+        description: Original source name 
+
+
+  - name: emergency_event_fact
+    config:
+      tags: ['ED Events and Status​​', 'Events (SD)', 'Care Delivery (D)']
+    description: ed event associated with an encounter. not limited to emergency department. ed events can happen at any time during encounter. e.g. a 'code blue' will nearly always trigger ed events.
+    columns:
+      - name: patient_key
+        description: The patient associated with an ED event
+        tests:
+          - not_null:
+              config:
+                severity: warn
+          
+      - name: encounter_key
+        description: The encounter where this event happened
+        
+      - name: location_key
+        description: The department associated with the ED event
+        tests:
+          - relationships:
+              field: location_key
+              to: ref('location_dim')
+              severity: warn
+
+      - name: adtevent_key
+        description: The ADT event linked to the ED event for med reconciliation
+
+      - name: emergency_event_type
+        description: The type of Ed event
+
+      - name: effective_date
+        description: Current timestamp
+  
+      - name: record_source
+        description: Original source name 
+
+
+  - name: evs_event_fact
+    description: Completed or deleted bed requests
+    config:
+      tags: ['EVS Details​​', 'Events (SD)', 'Care Delivery (D)']
+    columns:
+      - name: adt_event_key
+        description: The ADT event associated with the bed event
+
+      - name: location_key
+        description: The bed associated with the bed event
+        tests:
+          - relationships:
+              field: location_key
+              to: ref('location_dim')
+              severity: warn
+          
+      - name: patient_key
+        description: The patient associated with the bed event
+        tests:
+          - relationships:
+              field: person_key
+              to: ref('patient_dim')
+              severity: warn
+          
+      - name: encounter_key
+        description: The encounter associated with the bed event
+          
+      - name: employee_key
+        description: The employee associated with the bed event
+          
+      - name: epic_clean_id
+        description: The activity status of the bed event
+          
+      - name: evs_type
+        description: The type of cleaning request (bed or non-bed)
+          
+      - name: was_delayed
+        description: Flag identifying if the EVS request was placed on hold
+          
+      - name: event_source
+        description: The source for the bed event
+          
+      - name: isolation_type
+        description: The isolation type associated with the bed event
+          
+      - name: escalation_reason
+        description: The escalation reason associated with the bed event
+          
+      - name: clean_stage_name
+        description: The name for the stage associated with the bed event. Used for multi-stage cleaning events.
+          
+      - name: event_priority
+        description: The priority of the bed event
+          
+      - name: hold_reason
+        description: The hold reason for the bed event if a hold reason was documented
+          
+      - name: delay_reason
+        description: The delay reason for the bed event if a delay reason was given
+          
+      - name: clean_start_instant
+        description: The instant the cleaning request was first dirty
+          
+      - name: clean_assigned_instant
+        description: The instant the cleaning request was assigned
+          
+      - name: clean_in_progress_instant
+        description: The instant the cleaning request was marked in progress
+          
+      - name: clean_completed_instant
+        description: The instant the cleaning request was completed
+          
+      - name: effective_date
+        description: Current timestamp
+          
+      - name: record_source
+        description: Original source name
+
+
+  - name: location_dim
+    config:
+      tags: ['Corporate']
+    columns:
+      - name: key_type
+        description: Type of key based on query group
+
+      - name: location_key
+        description: Unique identifier for the facility location
+        tests:
+          - unique:
+              config:
+                severity: warn
+          - not_null:
+              config:
+                severity: warn
+
+      - name: effective_date
+        description: Current timestamp
+
+      - name: record_source
+        description: Original source name
+
+      - name: service_area_epicid
+        description: Unique identifier for the service area
+
+      - name: service_area_name
+        description: The name of the service area
+
+      - name: location_epic_id
+        description: Unique identifier for the location
+
+      - name: location_name
+        description: The name of the location
+
+      - name: department_epic_id
+        description: Unique identifier for the department
+
+      - name: department_name
+        description: The name of the department
+
+      - name: care_area_epic_id
+        description: Unique identifier for the care area
+
+      - name: care_area_name
+        description: The name of the care area
+
+      - name: room_epic_id
+        description: Unique identifier for the room
+
+      - name: room_name
+        description: The name of the room
+
+      - name: bed_epic_id
+        description: Unique identifier for the bed
+
+      - name: bed_name
+        description: The name of the bed
+
+      - name: department_external_name
+        description: The department name as displayed externally
+
+      - name: department_abbreviation
+        description: The abbreviation for the department name
+
+      - name: department_specialty
+        description: The department specialty
+
+      - name: department_region
+        description: The department region stored in report grouper thirteen
+
+      - name: department_psa
+        description: The department PSA stored in report group fourteen
+
+      - name: department_zip_code
+        description: The department zip code
+
+      - name: is_bed
+        description: Flag identifying the record as a bed
+
+      - name: is_room
+        description: Flag identifying the record as a room
+
+      - name: is_surgical_group
+        description: Flag identifying the record as a bed
+
+      - name: is_care_area
+        description: Flag identifying the record as a care area
+
+      - name: is_department
+        description: Flag identifying the record as a department
+
+      - name: is_location
+        description: Flag identifying the record as a location
+
+      - name: is_service_area
+        description: Flag identifying the record as a service area
+
+
+  - name: patient_dim
+    config:
+      tags: ['Patient']
+    columns:
+      - name: person_key
+        description: A unique identifier for each person
+        tests:
+          - unique:
+              config:
+                severity: warn
+          - not_null:
+              config:
+                severity: warn
+
+      - name: patient_epic_id
+        description: A unique identifier for each person
+
+      - name: primary_mrn
+        description: Patient's primary medical record number
+
+      - name: patient_last_name
+        description: Patient last name
+
+      - name: patient_first_name
+        description: Patient first name
+
+      - name: sex
+        description: Patient legal gender
+
+      - name: sex_assigned_at_birth
+        description: Patient gender assigned at birth
+
+      - name: addresss
+        description: Patient address
+
+      - name: city
+        description: Patient address city
+
+      - name: state
+        description: Patient address state
+
+      - name: zip
+        description: Patient address zip code
+
+      - name: patient_status
+        description: Patient status (living or deceased)                     
+
+      - name: primary_financial_class
+        description: Patient primary financial class
+
+      - name: is_test_patient
+        description: Flag for test patients
+
+      - name: birth_date
+        description: Patient birth date (birth instant if available)
+
+      - name: death_date
+        description: Patient death date
+
+      - name: effective_date
+        description: Current timestamp
+
+      - name: record_source
+        description: Original source name
+
+
+  - name: provider_dim
+    config:
+      tags: ['Provider']
+    columns:
+      - name: provider_key
+        description: A unique identifier for each provider
+        tests:
+          - unique:
+              config:
+                severity: warn
+          - not_null:
+              config:
+                severity: warn
+                
+      - name: effective_date
+        description: Current timestamp
+
+      - name: record_source
+        description: Original source name
+
+      - name: provider_id
+        description: A unique identifier for each provider
+        tests:
+          - unique:
+              config:
+                severity: warn
+          - not_null:
+              config:
+                severity: warn
+
+      - name: employee_id
+        description: A unique identifier for an employee/user
+
+      - name: provider_name
+        description: Provider name
+
+      - name: npi
+        description: The provider's National Provider Identifier (NPI)
+
+      - name: primary_department
+        description: The provider's primary/first department id
+
+      - name: primary_department_name
+        description: The provider's primary/first department name
+
+      - name: provider_type
+        description: Identify the record as a provider or resource
+
+      - name: primary_specialty
+        description: The provider's primary/first specialty
+
+      - name: can_authorize_meds
+        description: Flag for if the provider can authorize meds
+        tests:
+          - accepted_values:
+              values: ['Y', 'N', null]
+              config:
+                severity: warn
+
+      - name: can_authorize_orders
+        description: Flag for if the provider can authorize orders
+        tests:
+          - accepted_values:
+              values: ['Y', 'N', null]
+              config:
+                severity: warn
+
+      - name: doctor_degree
+        description: The degrees held by the provider
+
+      - name: clinican_title
+        description: The clinician title for the provider
+
+      - name: staff_resource
+        description: The type of resource (person, resource, or class)
+        tests:
+          - accepted_values:
+              values: ['Person', 'Resource', 'Blueprint', null]
+              config:
+                severity: warn
+
+      - name: start_date
+        description: The date the provider started with our organization

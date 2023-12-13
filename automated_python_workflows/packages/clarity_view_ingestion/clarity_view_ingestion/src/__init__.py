@@ -1,0 +1,5 @@
+from ingestion_utilities.logging_config import configure_logging
+
+from clarity_view_ingestion.src.config import LOG_PATH
+
+configure_logging(LOG_PATH)

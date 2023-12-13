@@ -1,0 +1,10 @@
+[build-system]
+requires = ["setuptools", "setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clarity_table_ingestion"
+version = "3.0.0"
+
+[project.scripts]
+file_ingestion = "clarity_table_ingestion.__main__:main"

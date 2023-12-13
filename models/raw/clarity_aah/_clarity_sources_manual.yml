@@ -1,0 +1,1472 @@
+#dbt run-operation stage_external_sources #use only to create only new tables 
+#dbt run-operation stage_external_sources --vars "ext_full_refresh: true" #use to create all tables
+version: 2
+
+sources:
+- name: raw_clarity_aah
+  schema: clarity_aah
+  tables:
+  
+  #district_c integer(254) changed to integer, running into casting errors. 
+  - name: RAW_CLARITY_POS
+    external:
+      location: "@clarity_aah.parquet_stage/CLARITY_POS"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/CLARITY_POS__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: POS_ID
+        data_type: NUMERIC(18,0)
+      - name: POS_NAME
+        data_type: VARCHAR
+      - name: POS_GROUP
+        data_type: INTEGER
+      - name: POS_TYPE
+        data_type: VARCHAR
+      - name: POS_LOC_IS_OUTSIDE
+        data_type: VARCHAR
+      - name: POS_NAME_ABBR
+        data_type: VARCHAR
+      - name: GL_PREFIX
+        data_type: VARCHAR
+      - name: RPT_GRP_ONE
+        data_type: VARCHAR
+      - name: RPT_GRP_TWO
+        data_type: VARCHAR
+      - name: RPT_GRP_THREE
+        data_type: VARCHAR
+      - name: RPT_GRP_FOUR
+        data_type: VARCHAR
+      - name: RPT_GRP_FIVE
+        data_type: VARCHAR
+      - name: RPT_GRP_SIX
+        data_type: VARCHAR
+      - name: RPT_GRP_SEVEN
+        data_type: VARCHAR
+      - name: RPT_GRP_EIGHT
+        data_type: VARCHAR
+      - name: RPT_GRP_NINE
+        data_type: VARCHAR
+      - name: RPT_GRP_TEN
+        data_type: VARCHAR
+      - name: ADDRESS_LINE_1
+        data_type: VARCHAR
+      - name: ADDRESS_LINE_2
+        data_type: VARCHAR
+      - name: CITY
+        data_type: VARCHAR
+      - name: STATE_C
+        data_type: VARCHAR
+      - name: ZIP
+        data_type: VARCHAR
+      - name: AREA_CODE
+        data_type: VARCHAR
+      - name: PHONE
+        data_type: VARCHAR
+      - name: LOC_TYPE_C
+        data_type: INTEGER
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: RPT_GRP_ELEVEN_C
+        data_type: VARCHAR
+      - name: RPT_GRP_TWELVE_C
+        data_type: VARCHAR
+      - name: RPT_GRP_THIRTEEN_C
+        data_type: VARCHAR
+      - name: RPT_GRP_FOURTEEN_C
+        data_type: VARCHAR
+      - name: RPT_GRP_FIFTEEN_C
+        data_type: VARCHAR
+      - name: RPT_GRP_SIXTEEN_C
+        data_type: VARCHAR
+      - name: RPT_GRP_SEVNTEEN_C
+        data_type: VARCHAR
+      - name: RPT_GRP_EIGHTEEN_C
+        data_type: VARCHAR
+      - name: RPT_GRP_NINETEEN_C
+        data_type: VARCHAR
+      - name: RPT_GRP_TWENTY_C
+        data_type: VARCHAR
+      - name: RECORD_STATUS
+        data_type: INTEGER
+      - name: BUILDING_NUMBER
+        data_type: VARCHAR
+      - name: DISTRICT_C
+        data_type: INTEGER
+      - name: COUNTY_C
+        data_type: VARCHAR
+      - name: COUNTRY_C
+        data_type: VARCHAR
+      - name: LOGO_FILENAME
+        data_type: VARCHAR
+      - name: POS_CODE
+        data_type: VARCHAR
+      - name: POS_TYPE_C
+        data_type: INTEGER
+      - name: SERVICE_AREA_ID
+        data_type: NUMERIC(18,0)
+      - name: ORG_IDNT
+        data_type: VARCHAR
+      - name: REGION_ID
+        data_type: NUMERIC(18,0)
+      - name: GROUP_ID
+        data_type: NUMERIC(18,0)
+      - name: OPEN_DT
+        data_type: DATETIME
+      - name: CLOSE_DT
+        data_type: DATETIME
+      - name: JOIN_DT
+        data_type: DATETIME
+      - name: LEAVE_DT
+        data_type: DATETIME
+      - name: POS_SUBTYPE_C
+        data_type: INTEGER
+      - name: ADT_PARENT_ID
+        data_type: NUMERIC(18,0)
+      - name: TECH_CONTACT_NAME
+        data_type: VARCHAR
+      - name: TECH_CONTACT_EMAIL
+        data_type: VARCHAR
+      - name: TECH_CONTACT_PHONE
+        data_type: VARCHAR
+      - name: TECH_CONTACT_URL
+        data_type: VARCHAR
+      - name: TECH_CONTACT_FAX
+        data_type: VARCHAR
+      - name: TECH_CONTACT_EXT
+        data_type: VARCHAR
+      - name: CLINIC_OR_BILLING_C
+        data_type: INTEGER
+      - name: LOGO_PRINT_GROUP_ID
+        data_type: NUMERIC(18,0)
+      - name: FAX_NUM
+        data_type: VARCHAR
+      - name: SD_RW_EXPORT_TEMPLATE_ID
+        data_type: NUMERIC(18,0)
+      - name: PO_MEDICARE_NUM
+        data_type: VARCHAR
+      - name: BOOK_ANYWHERE_CONFIG_ID
+        data_type: NUMERIC(18,0)
+      - name: NOT_LEAKED_DEMAND_YN
+        data_type: VARCHAR
+      - name: ADDRESS_CHECKSUM
+        data_type: VARCHAR
+      - name: LINK_ORG_ID
+        data_type: NUMERIC(18,0)
+      - name: TC_ZONE_C
+        data_type: INTEGER
+      - name: CLAIM_SERV_FAC_NAME
+        data_type: VARCHAR
+      - name: LEGAL_OPEN_DT
+        data_type: DATETIME
+      - name: LEGAL_CLOSE_DT
+        data_type: DATETIME
+      - name: ODS_LAST_CHANGE_DT
+        data_type: DATETIME
+      - name: RECORD_CLASS_C
+        data_type: INTEGER
+      - name: EMAIL_ADDRESS
+        data_type: VARCHAR
+      - name: WEB_ADDRESS
+        data_type: VARCHAR
+      - name: POS_LOC_IS_OUTSIDE_YN
+        data_type: VARCHAR
+      - name: ALLOW_REFER_TO_YN
+        data_type: VARCHAR
+      - name: LEVEL_OF_CARE_MAP_TBL_ID
+        data_type: NUMERIC(18,0)
+      - name: SERVICE_MAP_TBL_ID
+        data_type: NUMERIC(18,0)
+      - name: HL_IS_ON_C
+        data_type: INTEGER
+      - name: FAC_ACTOR_TYPE_C
+        data_type: INTEGER
+      - name: PERMIT_CLIN_DERIVATION_YN
+        data_type: VARCHAR
+      - name: COMPILED_HL_IS_ON_C
+        data_type: INTEGER
+      - name: CLM_SERV_FAC_ADDR_1
+        data_type: VARCHAR
+      - name: CLM_SERV_FAC_ADDR_2
+        data_type: VARCHAR
+      - name: CLM_SERV_FAC_CITY
+        data_type: VARCHAR
+      - name: CLM_SRV_FAC_STATE_C
+        data_type: VARCHAR
+      - name: CLM_SERV_FAC_ZIP
+        data_type: VARCHAR
+      - name: IS_BUSINESS_SEGMENT_YN
+        data_type: VARCHAR
+      - name: IS_NON_BUS_SEG_SERV_AREA_YN
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_CLARITY_POS_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/CLARITY_POS"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/CLARITY_POS__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: POS_ID
+        data_type: NUMERIC(18,0)
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+
+#Changed department_id from numeric to varchar, metadata tables says its numeric but varchar fields were pulled through
+  - name: RAW_F_SCHED_APPT_STATS
+    external:
+      location: "@clarity_aah.parquet_stage/F_SCHED_APPT_STATS"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/F_SCHED_APPT_STATS__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: STATISTICS_DATE
+        data_type: DATETIME
+      - name: PROV_ID
+        data_type: VARCHAR
+      - name: DEPARTMENT_ID
+        data_type: VARCHAR
+      - name: UPDATE_DATE
+        data_type: DATETIME
+      - name: MASTER_SCHEDULABLE_HRS
+        data_type: NUMERIC(18,2)
+      - name: SCHEDULABLE_HRS
+        data_type: NUMERIC(18,2)
+      - name: BOOKED_HRS
+        data_type: NUMERIC(18,2)
+      - name: AVAIL_OPENINGS_ON_DAY_CNT
+        data_type: NUMERIC(18,0)
+      - name: REG_OPENINGS_CNT
+        data_type: NUMERIC(18,0)
+      - name: SAME_DAY_REG_OPENINGS_USED_CNT
+        data_type: NUMERIC(18,0)
+      - name: PREVIOUS_REG_OPENINGS_USED_CNT
+        data_type: NUMERIC(18,0)
+      - name: OVERBOOK_OPENINGS_CNT
+        data_type: NUMERIC(18,0)
+      - name: SAME_DAY_OVRBK_OPENGS_USED_CNT
+        data_type: NUMERIC(18,0)
+      - name: PREVIOUS_OVRBK_OPENGS_USED_CNT
+        data_type: NUMERIC(18,0)
+      - name: ARRIVED_CNT
+        data_type: INTEGER
+      - name: NO_SHOW_CNT
+        data_type: INTEGER
+      - name: LEFT_WO_SEEN_CNT
+        data_type: INTEGER
+      - name: COMPLETED_CNT
+        data_type: INTEGER
+      - name: SCHEDULED_CNT
+        data_type: INTEGER
+      - name: CANCELED_CNT
+        data_type: INTEGER
+      - name: PATIENT_CANCELED_CNT
+        data_type: INTEGER
+      - name: SAME_DAY_CANCELED_CNT
+        data_type: INTEGER
+      - name: LATE_CANCELED_CNT
+        data_type: INTEGER
+      - name: LATE_PROV_CANCELED_CNT
+        data_type: INTEGER
+      - name: RESCHEDULED_APPT_CNT
+        data_type: INTEGER
+      - name: SAME_DAY_APPT_CNT
+        data_type: INTEGER
+      - name: APPT_WITH_PCP_CNT
+        data_type: INTEGER
+      - name: APPT_FOR_TODAY_LEAD_DAYS
+        data_type: INTEGER
+      - name: APPT_FOR_TODAY_CNT
+        data_type: INTEGER
+      - name: APPT_MADE_TODAY_LEAD_DAYS
+        data_type: INTEGER
+      - name: APPT_MADE_TODAY_CNT
+        data_type: INTEGER
+      - name: REG_AVAILABLE_HRS
+        data_type: NUMERIC(18,2)
+      - name: OVERBOOK_AVAILABLE_HRS
+        data_type: NUMERIC(18,2)
+      - name: UNAVAILABLE_OPENINGS_USED_CNT
+        data_type: NUMERIC(18,0)
+      - name: HELD_OPENINGS_USED_CNT
+        data_type: NUMERIC(18,0)
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_F_SCHED_APPT_STATS_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/F_SCHED_APPT_STATS"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/F_SCHED_APPT_STATS__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: STATISTICS_DATE
+        data_type: DATETIME
+      - name: PROV_ID
+        data_type: VARCHAR
+      - name: DEPARTMENT_ID
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_ACCESS_PROV
+    external:
+      location: "@clarity_aah.parquet_stage/ACCESS_PROV"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/ACCESS_PROV__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: CONFIG_ID
+        data_type: NUMERIC(18,0)
+      - name: PROV_ID
+        data_type: VARCHAR
+      - name: CONTACT_DATE
+        data_type: FLOAT
+      - name: DEPARTMENT_ID
+        data_type: VARCHAR
+      - name: SEARCH_DATE
+        data_type: DATETIME
+      - name: SLOT_TIME
+        data_type: DATETIME
+      - name: DAYS_WAIT
+        data_type: INTEGER
+      - name: SLOT_LENGTH
+        data_type: INTEGER
+      - name: OVERBOOK
+        data_type: VARCHAR
+      - name: UNAVAILABLE
+        data_type: VARCHAR
+      - name: APPT_BLOCK_C
+        data_type: VARCHAR
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+
+#below tables are empty
+  - name: RAW_ACCESS_PROV_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/ACCESS_PROV"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/ACCESS_PROV__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: CONFIG_ID
+        data_type: NUMERIC(18,0)
+      - name: PROV_ID
+        data_type: VARCHAR
+      - name: CONTACT_DATE
+        data_type: FLOAT
+      - name: DEPARTMENT_ID
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_ZC_DELAY_REASON
+    external:
+      location: "@clarity_aah.parquet_stage/ZC_DELAY_REASON"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/ZC_DELAY_REASON__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: DELAY_REASON_C
+        data_type: INTEGER
+      - name: NAME
+        data_type: VARCHAR
+      - name: TITLE
+        data_type: VARCHAR
+      - name: ABBR
+        data_type: VARCHAR
+      - name: INTERNAL_ID
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_CODE_INT_CODE_INFO_QUAN
+    external:
+      location: "@clarity_aah.parquet_stage/CODE_INT_CODE_INFO_QUAN"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/CODE_INT_CODE_INFO_QUAN__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: HSP_ACCOUNT_ID
+        data_type: NUMERIC(18,0)
+      - name: GROUP_LINE
+        data_type: INTEGER
+      - name: VALUE_LINE
+        data_type: INTEGER
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: CODE_INT_CODE_INFO_QUAN
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_CODE_INT_CODE_INFO_QUAN_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/CODE_INT_CODE_INFO_QUAN"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/CODE_INT_CODE_INFO_QUAN__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: HSP_ACCOUNT_ID
+        data_type: NUMERIC(18,0)
+      - name: GROUP_LINE
+        data_type: INTEGER
+      - name: VALUE_LINE
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_HSP_ACCT_ECDDX_ALT
+    external:
+      location: "@clarity_aah.parquet_stage/HSP_ACCT_ECDDX_ALT"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/HSP_ACCT_ECDDX_ALT__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: ACCT_ID
+        data_type: NUMERIC(18,0)
+      - name: LINE
+        data_type: INTEGER
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: ECD_DX_ALT_ID
+        data_type: NUMERIC(18,0)
+      - name: ECD_DX_ALT_EXCLD_YN
+        data_type: VARCHAR
+      - name: ECD_DX_ALT_POA_C
+        data_type: INTEGER
+      - name: ECD_DX_ALT_CC_C
+        data_type: INTEGER
+      - name: ECD_DX_ALT_HAC_YN
+        data_type: VARCHAR
+      - name: ECD_DX_ALT_AFDRG_YN
+        data_type: VARCHAR
+      - name: ECD_DX_ALT_SOI_C
+        data_type: INTEGER
+      - name: ECD_DX_ALT_ROM_C
+        data_type: INTEGER
+      - name: ECD_DX_ALT_AFSOI_YN
+        data_type: VARCHAR
+      - name: ECD_DX_ALT_AFROM_YN
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_HSP_ACCT_ECDDX_ALT_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/HSP_ACCT_ECDDX_ALT"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/HSP_ACCT_ECDDX_ALT__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: ACCT_ID
+        data_type: NUMERIC(18,0)
+      - name: LINE
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_HSP_ACCT_EVENTS
+    external:
+      location: "@clarity_aah.parquet_stage/HSP_ACCT_EVENTS"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/HSP_ACCT_EVENTS__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: HSP_ACCOUNT_ID
+        data_type: NUMERIC(18,0)
+      - name: LINE
+        data_type: INTEGER
+      - name: EVENT_PROV_ID
+        data_type: VARCHAR
+      - name: EVENT_DATE
+        data_type: DATETIME
+      - name: EVENT_COMMENT
+        data_type: VARCHAR
+      - name: ASA_CLASS
+        data_type: INTEGER
+      - name: ANESTH_TYPE_HA_C
+        data_type: INTEGER
+      - name: ANESTH_PROV_ID
+        data_type: VARCHAR
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_HSP_ACCT_EVENTS_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/HSP_ACCT_EVENTS"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/HSP_ACCT_EVENTS__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: HSP_ACCOUNT_ID
+        data_type: NUMERIC(18,0)
+      - name: LINE
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_HSP_ACCT_PX_LIST
+    external:
+      location: "@clarity_aah.parquet_stage/HSP_ACCT_PX_LIST"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/HSP_ACCT_PX_LIST__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: HSP_ACCOUNT_ID
+        data_type: NUMERIC(18,0)
+      - name: LINE
+        data_type: INTEGER
+      - name: FINAL_ICD_PX_ID
+        data_type: VARCHAR
+      - name: PROC_DATE
+        data_type: DATETIME
+      - name: PROC_PERF_PROV_ID
+        data_type: VARCHAR
+      - name: PROC_EVENT_NUMBER
+        data_type: INTEGER
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: PX_AFCT_ROM_YN
+        data_type: VARCHAR
+      - name: PX_EXCLD_RPT_YN
+        data_type: VARCHAR
+      - name: PX_AFCT_SOI_YN
+        data_type: VARCHAR
+      - name: AFFECTS_DRG_YN
+        data_type: VARCHAR
+      - name: INTERVENTION_TYPE_C
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_HSP_ACCT_PX_LIST_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/HSP_ACCT_PX_LIST"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/HSP_ACCT_PX_LIST__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: HSP_ACCOUNT_ID
+        data_type: NUMERIC(18,0)
+      - name: LINE
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_MYC_PT_ADDR
+    external:
+      location: "@clarity_aah.parquet_stage/MYC_PT_ADDR"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/MYC_PT_ADDR__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: WPR_ID
+        data_type: VARCHAR
+      - name: LINE
+        data_type: INTEGER
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: ADDRESS
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_MYC_PT_ADDR_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/MYC_PT_ADDR"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/MYC_PT_ADDR__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: WPR_ID
+        data_type: VARCHAR
+      - name: LINE
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_OR_UTIL_BLOCK_SUMMARY
+    external:
+      location: "@clarity_aah.parquet_stage/OR_UTIL_BLOCK_SUMMARY"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/OR_UTIL_BLOCK_SUMMARY__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: UTILIZATION_GROUP_ID
+        data_type: NUMERIC(18,0)
+      - name: UTIL_DATE
+        data_type: DATETIME
+      - name: LOCATION_ID
+        data_type: NUMERIC(18,0)
+      - name: BLOCK_KEY
+        data_type: VARCHAR
+      - name: BLOCK_TYPE_C
+        data_type: INTEGER
+      - name: SERVICE_C
+        data_type: VARCHAR
+      - name: SURGEON_ID
+        data_type: VARCHAR
+      - name: GROUP_ID
+        data_type: VARCHAR
+      - name: SCHED_PROCEDURE_IN
+        data_type: INTEGER
+      - name: SCHED_PROCEDURE_OVERBOOK
+        data_type: INTEGER
+      - name: SCHED_PROCEDURE_OUT
+        data_type: INTEGER
+      - name: SCHED_SETUP_CLEANUP_IN
+        data_type: INTEGER
+      - name: SCHED_SETUP_CLEANUP_OVERBOOK
+        data_type: INTEGER
+      - name: SCHED_SETUP_CLEANUP_OUT
+        data_type: INTEGER
+      - name: PERFORM_PROCEDURE_IN
+        data_type: INTEGER
+      - name: PERFORM_PROCEDURE_OVERBOOK
+        data_type: INTEGER
+      - name: PERFORM_PROCEDURE_OUT
+        data_type: INTEGER
+      - name: PERFORM_SETUP_CLEANUP_IN
+        data_type: INTEGER
+      - name: PERFORM_SETUP_CLEANUP_OVERBOOK
+        data_type: INTEGER
+      - name: PERFORM_SETUP_CLEANUP_OUT
+        data_type: INTEGER
+      - name: AVAILABLE_TIME
+        data_type: INTEGER
+      - name: MANUAL_RELEASED_TIME
+        data_type: INTEGER
+      - name: DEPLOYMENT_ID
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_OR_UTIL_BLOCK_CASE_SUM
+    external:
+      location: "@clarity_aah.parquet_stage/OR_UTIL_BLOCK_CASE_SUM"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/OR_UTIL_BLOCK_CASE_SUM__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: UTILIZATION_GROUP_ID
+        data_type: NUMERIC(18,0)
+      - name: UTIL_DATE
+        data_type: DATETIME
+      - name: LOCATION_ID
+        data_type: NUMERIC(18,0)
+      - name: BLOCK_KEY
+        data_type: VARCHAR
+      - name: CASE_ID
+        data_type: VARCHAR
+      - name: LOG_ID
+        data_type: VARCHAR
+      - name: BLOCK_TYPE_C
+        data_type: INTEGER
+      - name: SERVICE_C
+        data_type: VARCHAR
+      - name: SURGEON_ID
+        data_type: VARCHAR
+      - name: GROUP_ID
+        data_type: VARCHAR
+      - name: SCHED_SETUP_IN
+        data_type: INTEGER
+      - name: SCHED_SETUP_OVERBOOK
+        data_type: INTEGER
+      - name: SCHED_SETUP_OUT
+        data_type: INTEGER
+      - name: SCHED_PROCEDURE_IN
+        data_type: INTEGER
+      - name: SCHED_PROCEDURE_OVERBOOK
+        data_type: INTEGER
+      - name: SCHED_PROCEDURE_OUT
+        data_type: INTEGER
+      - name: SCHED_CLEANUP_IN
+        data_type: INTEGER
+      - name: SCHED_CLEANUP_OVERBOOK
+        data_type: INTEGER
+      - name: SCHED_CLEANUP_OUT
+        data_type: INTEGER
+      - name: SCHED_SETUP_START_TIME
+        data_type: DATETIME
+      - name: SCHED_PROCEDURE_START_TIME
+        data_type: DATETIME
+      - name: SCHED_PROCEDURE_END_TIME
+        data_type: DATETIME
+      - name: SCHED_CLEANUP_END_TIME
+        data_type: DATETIME
+      - name: SCHED_NUM_BLOCKS
+        data_type: INTEGER
+      - name: PERFORM_SETUP_IN
+        data_type: INTEGER
+      - name: PERFORM_SETUP_OVERBOOK
+        data_type: INTEGER
+      - name: PERFORM_SETUP_OUT
+        data_type: INTEGER
+      - name: PERFORM_PROCEDURE_IN
+        data_type: INTEGER
+      - name: PERFORM_PROCEDURE_OVERBOOK
+        data_type: INTEGER
+      - name: PERFORM_PROCEDURE_OUT
+        data_type: INTEGER
+      - name: PERFORM_CLEANUP_IN
+        data_type: INTEGER
+      - name: PERFORM_CLEANUP_OVERBOOK
+        data_type: INTEGER
+      - name: PERFORM_CLEANUP_OUT
+        data_type: INTEGER
+      - name: PERFORM_SETUP_START_TIME
+        data_type: DATETIME
+      - name: PERFORM_PROCEDURE_START_TIME
+        data_type: DATETIME
+      - name: PERFORM_PROCEDURE_END_TIME
+        data_type: DATETIME
+      - name: PERFORM_CLEANUP_END_TIME
+        data_type: DATETIME
+      - name: PERFORM_NUM_BLOCKS
+        data_type: INTEGER
+      - name: DEPLOYMENT_ID
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_CODE_INT_CODE_INFO_LN
+    external:
+      location: "@clarity_aah.parquet_stage/CODE_INT_CODE_INFO_LN"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/CODE_INT_CODE_INFO_LN__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: HSP_ACCOUNT_ID
+        data_type: NUMERIC(18,0)
+      - name: GROUP_LINE
+        data_type: INTEGER
+      - name: VALUE_LINE
+        data_type: INTEGER
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: CODE_INT_CODE_INFO_LN
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_CODE_INT_CODE_INFO_LN_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/CODE_INT_CODE_INFO_LN"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/CODE_INT_CODE_INFO_LN__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: HSP_ACCOUNT_ID
+        data_type: NUMERIC(18,0)
+      - name: GROUP_LINE
+        data_type: INTEGER
+      - name: VALUE_LINE
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_DOCS_RCVD_DX
+    external:
+      location: "@clarity_aah.parquet_stage/DOCS_RCVD_DX"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/DOCS_RCVD_DX__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: DOCUMENT_ID
+        data_type: NUMERIC(22,0)
+      - name: CONTACT_DATE_REAL
+        data_type: FLOAT
+      - name: LINE
+        data_type: INTEGER
+      - name: CONTACT_DATE
+        data_type: DATETIME
+      - name: DX_REF_ID
+        data_type: VARCHAR
+      - name: DX_ENC_ID
+        data_type: VARCHAR
+      - name: DX_NAME
+        data_type: VARCHAR
+      - name: DX_CONTEXT_C
+        data_type: INTEGER
+      - name: DX_SRC_CSN
+        data_type: NUMERIC(22,0)
+      - name: DX_CHKSUM
+        data_type: VARCHAR
+      - name: DX_START_DTTM
+        data_type: DATETIME
+      - name: DX_END_DTTM
+        data_type: DATETIME
+      - name: DX_EDG_ID
+        data_type: NUMERIC(18,0)
+      - name: DX_LST_UPD_INST_DTTM
+        data_type: DATETIME
+      - name: DX_PRIMARY_YN
+        data_type: VARCHAR
+      - name: DX_IS_CHRONIC_YN
+        data_type: VARCHAR
+      - name: DX_EXTERNAL_CAUSE_ID
+        data_type: NUMERIC(18,0)
+      - name: DX_ACCIDENT_ID
+        data_type: NUMERIC(18,0)
+      - name: DX_SPORT_ID_C
+        data_type: INTEGER
+      - name: DX_SYMPTOM_ID
+        data_type: NUMERIC(18,0)
+      - name: DX_ENDOCRINOLOGICAL_CODE_ID
+        data_type: NUMERIC(18,0)
+      - name: DX_ATC_CODE_C
+        data_type: INTEGER
+      - name: DX_STATUS_C
+        data_type: INTEGER
+      - name: DX_AUTHOR_ID
+        data_type: VARCHAR
+      - name: DX_AUTHOR_EXPIRED_ID
+        data_type: VARCHAR
+      - name: DX_SOURCE_OF_INFO_C
+        data_type: INTEGER
+      - name: DX_CERTAINTY_C
+        data_type: INTEGER
+      - name: DX_SHARE_PAT_YN
+        data_type: VARCHAR
+      - name: DX_ENDED_DEP_ID
+        data_type: VARCHAR
+      - name: DX_FILTER_RSN_C
+        data_type: INTEGER
+      - name: DX_SRC_ORG_ID
+        data_type: NUMERIC(18,0)
+      - name: DX_HL7_TYPE_C
+        data_type: INTEGER
+      - name: DX_IS_ED_YN
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_DOCS_RCVD_DX_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/DOCS_RCVD_DX"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/DOCS_RCVD_DX__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: DOCUMENT_ID
+        data_type: NUMERIC(22,0)
+      - name: CONTACT_DATE_REAL
+        data_type: FLOAT
+      - name: LINE
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_HSP_ACCT_EXTINJ_CD
+    external:
+      location: "@clarity_aah.parquet_stage/HSP_ACCT_EXTINJ_CD"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/HSP_ACCT_EXTINJ_CD__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: HSP_ACCOUNT_ID
+        data_type: NUMERIC(18,0)
+      - name: LINE
+        data_type: INTEGER
+      - name: EXT_INJURY_DX_ID
+        data_type: NUMERIC(18,0)
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: EXT_INJURY_POA_YNU
+        data_type: VARCHAR
+      - name: EXT_COMORBIDITY_YN
+        data_type: VARCHAR
+      - name: EXT_DX_AFF_DRG_YN
+        data_type: VARCHAR
+      - name: ECODE_DX_SOI_C
+        data_type: INTEGER
+      - name: ECODE_DX_ROM_C
+        data_type: INTEGER
+      - name: ECODE_DX_EXCLD_YN
+        data_type: VARCHAR
+      - name: ECD_DX_AFCT_SOI_YN
+        data_type: VARCHAR
+      - name: ECD_DX_AFCT_ROM_YN
+        data_type: VARCHAR
+      - name: ECODE_DX_POA_C
+        data_type: INTEGER
+      - name: EXT_COMORBIDITY_C
+        data_type: INTEGER
+      - name: ECD_HAC_YN
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_HSP_ACCT_EXTINJ_CD_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/HSP_ACCT_EXTINJ_CD"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/HSP_ACCT_EXTINJ_CD__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: HSP_ACCOUNT_ID
+        data_type: NUMERIC(18,0)
+      - name: LINE
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_PDMP_REVIEW_INFO
+    external:
+      location: "@clarity_aah.parquet_stage/PDMP_REVIEW_INFO"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/PDMP_REVIEW_INFO__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: PAT_ID
+        data_type: VARCHAR
+      - name: LINE
+        data_type: INTEGER
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: REVIEW_USER_ID
+        data_type: VARCHAR
+      - name: REVIEW_USER_UTC_DTTM
+        data_type: DATETIME
+      - name: REVIEW_ENC_CSN
+        data_type: NUMERIC(18,0)
+      - name: REVIEW_TYPE_C
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_PDMP_REVIEW_INFO_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/PDMP_REVIEW_INFO"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/PDMP_REVIEW_INFO__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: PAT_ID
+        data_type: VARCHAR
+      - name: LINE
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_OR_IMP_EXPLANT
+    external:
+      location: "@clarity_aah.parquet_stage/OR_IMP_EXPLANT"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/OR_IMP_EXPLANT__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: IMPLANT_ID
+        data_type: VARCHAR
+      - name: LINE
+        data_type: INTEGER
+      - name: EXPLANTED_DATE
+        data_type: DATETIME
+      - name: EXPLANT_LOG_ID
+        data_type: VARCHAR
+      - name: EXPL_MANF_NOTF_DT
+        data_type: DATETIME
+      - name: DISPOSITION_C
+        data_type: INTEGER
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: EXPLANTED_TIME
+        data_type: DATETIME
+      - name: EXPLANT_STAFF_ID
+        data_type: VARCHAR
+      - name: NUM_EXPLANTED
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_OR_IMP_EXPLANT_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/OR_IMP_EXPLANT"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/OR_IMP_EXPLANT__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: IMPLANT_ID
+        data_type: VARCHAR
+      - name: LINE
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_HSP_ACCT_ICDPX_ALT
+    external:
+      location: "@clarity_aah.parquet_stage/HSP_ACCT_ICDPX_ALT"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/HSP_ACCT_ICDPX_ALT__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: ACCT_ID
+        data_type: NUMERIC(18,0)
+      - name: LINE
+        data_type: INTEGER
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: ICD_PX_ALT_ID
+        data_type: VARCHAR
+      - name: ICD_PX_ALT_DATE
+        data_type: DATETIME
+      - name: ICD_PX_ALT_PROV_ID
+        data_type: VARCHAR
+      - name: ICD_PX_ALT_EVNT_NUM
+        data_type: INTEGER
+      - name: ICD_PX_ALT_EXCLD_YN
+        data_type: VARCHAR
+      - name: ICD_PX_ALT_AFSOI_YN
+        data_type: VARCHAR
+      - name: ICD_PX_ALT_AFROM_YN
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_HSP_ACCT_ICDPX_ALT_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/HSP_ACCT_ICDPX_ALT"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/HSP_ACCT_ICDPX_ALT__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: ACCT_ID
+        data_type: NUMERIC(18,0)
+      - name: LINE
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_HSP_ACCT_CPT_CODES
+    external:
+      location: "@clarity_aah.parquet_stage/HSP_ACCT_CPT_CODES"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/HSP_ACCT_CPT_CODES__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: HSP_ACCOUNT_ID
+        data_type: NUMERIC(18,0)
+      - name: LINE
+        data_type: INTEGER
+      - name: CPT_CODE
+        data_type: VARCHAR
+      - name: CPT_CODE_DATE
+        data_type: DATETIME
+      - name: CPT_PERF_PROV_ID
+        data_type: VARCHAR
+      - name: CPT_EVENT_NUMBER
+        data_type: INTEGER
+      - name: CPT_MODIFIERS
+        data_type: VARCHAR
+      - name: LMRP_CODE
+        data_type: VARCHAR
+      - name: CPT_CODE_DESC
+        data_type: VARCHAR
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: PX_APC_PMT_STS_IND
+        data_type: VARCHAR
+      - name: PX_CODE_AFF_DRG_YN
+        data_type: VARCHAR
+      - name: PX_APC_PMT_IND
+        data_type: NUMERIC(18,0)
+      - name: PX_APC_WEIGHT
+        data_type: NUMERIC(18,2)
+      - name: PX_APC_FAC_RMB_AMT
+        data_type: NUMERIC(18,2)
+      - name: PX_OCE_EDIT_CODE
+        data_type: VARCHAR
+      - name: PX_APC_CODE
+        data_type: VARCHAR
+      - name: PX_HCFA_PAYMT_AMT
+        data_type: NUMERIC(18,2)
+      - name: PX_REIMB_TYPE
+        data_type: VARCHAR
+      - name: PX_COPAY_AMT
+        data_type: NUMERIC(18,2)
+      - name: PX_PAY_RT_UNIT_AMT
+        data_type: NUMERIC(18,2)
+      - name: PX_REV_CODE_ID
+        data_type: NUMERIC(18,0)
+      - name: CPT_EXCLD_RPT_YN
+        data_type: VARCHAR
+      - name: CPT_QUANTITY
+        data_type: INTEGER
+      - name: CPT_POS_TYPE_C
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_HSP_ACCT_CPT_CODES_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/HSP_ACCT_CPT_CODES"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/HSP_ACCT_CPT_CODES__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: HSP_ACCOUNT_ID
+        data_type: NUMERIC(18,0)
+      - name: LINE
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_MYC_PT_EMAIL_ADDR
+    external:
+      location: "@clarity_aah.parquet_stage/MYC_PT_EMAIL_ADDR"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/MYC_PT_EMAIL_ADDR__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: MYPT_ID
+        data_type: VARCHAR
+      - name: LINE
+        data_type: INTEGER
+      - name: EMAIL_ADDRESS
+        data_type: VARCHAR
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_MYC_PT_EMAIL_ADDR_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/MYC_PT_EMAIL_ADDR"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/MYC_PT_EMAIL_ADDR__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: MYPT_ID
+        data_type: VARCHAR
+      - name: LINE
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_OR_LOG_DIAG_CODES
+    external:
+      location: "@clarity_aah.parquet_stage/OR_LOG_DIAG_CODES"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/OR_LOG_DIAG_CODES__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: LOG_ID
+        data_type: VARCHAR
+      - name: LINE
+        data_type: INTEGER
+      - name: DX_CODES_ID
+        data_type: NUMERIC(18,0)
+      - name: DIAG_ASSOC_YN
+        data_type: VARCHAR
+      - name: DIAGNOSIS_PROC_ID
+        data_type: VARCHAR
+      - name: DIAGNOSIS_PANEL
+        data_type: INTEGER
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: PRIMARY_DX_YN
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_OR_LOG_DIAG_CODES_DELETE
+    external:
+      location: "@clarity_aah.parquet_stage/OR_LOG_DIAG_CODES"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/delete/OR_LOG_DIAG_CODES__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: LOG_ID
+        data_type: VARCHAR
+      - name: LINE
+        data_type: INTEGER
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP
+  - name: RAW_REFERRAL_MESSAGE
+    external:
+      location: "@clarity_aah.parquet_stage/REFERRAL_MESSAGE"
+      file_format: "clarity_aah.parquet_format"
+      pattern: ".*/(backfill|full|incremental)/REFERRAL_MESSAGE__.*[.]parquet"
+
+      snowpipe:
+        auto_ingest: true
+        integration: AZ_MDP_LANDING_NOTIFICATION
+        copy_options: "on_error = continue, enforce_length = false"
+
+    columns:
+      - name: REFERRAL_ID
+        data_type: NUMERIC(18,0)
+      - name: LINE
+        data_type: INTEGER
+      - name: CM_PHY_OWNER_ID
+        data_type: VARCHAR
+      - name: CM_LOG_OWNER_ID
+        data_type: VARCHAR
+      - name: REFERRAL_MESSAGE
+        data_type: VARCHAR
+      - name: SRC_OPERATION
+        data_type: VARCHAR
+      - name: SRC_UPDATE_DT
+        data_type: TIMESTAMP

@@ -1,0 +1,12 @@
+dbt_cloud_job_id,dbt_cloud_job_name
+266421,'Feature > Test Slim CI'
+268980,'Test Daily'
+287520,'Test Full Refresh On Demand'
+304342,'Test On Demand'
+268981,'UAT Daily'
+287518,'UAT Full Refresh On Demand'
+302724,'UAT On Demand'
+304382,'Prod Daily'
+405571,'Prod On Demand'
+416665,'UAT Artifacts Build'
+411691,'PROD Build Artifacts'

@@ -1,0 +1,13 @@
+# you shouldn't commit these into source control
+# these are the default directory names, adjust/add to fit your needs
+target/
+dbt_packages/
+logs/
+*.pyc
+*.egg-info
+automated_python_workflows/packages/clarity_table_ingestion/clarity_table_ingestion/input
+automated_python_workflows/packages/clarity_table_ingestion/clarity_table_ingestion/outputs
+python_workflows/clarity_file_ingestion_project/clarity_file_ingestion/src/views/outputs/
+automated_python_workflows/packages/clarity_view_ingestion/clarity_view_ingestion/outputs
+automated_python_workflows/packages/clarity_view_ingestion/clarity_view_ingestion/inputs
+automated_python_workflows/packages/clarity_view_ingestion/clarity_view_ingestion/experimentation
